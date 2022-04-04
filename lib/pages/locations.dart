@@ -14,7 +14,7 @@ class _LocationsState extends State<Locations> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: const EdgeInsets.fromLTRB(25, 50, 25, 25),
+        padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -22,21 +22,24 @@ class _LocationsState extends State<Locations> {
             colors: [Color.fromRGBO(0, 188, 248, 1), Color.fromRGBO(1, 95, 231, 1)],
           ),
         ),
-        child: Column(children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: SafeArea(
+          child: Column(
             children: [
-              GestureDetector(
-                onTap: () => goToHome(context),
-                child: SvgPicture.asset("images/back.svg"),
-              ),
-              Text("Select City", style: Config.bodyText1.copyWith(fontSize: 22)),
-              SvgPicture.asset("images/add.svg"),
-            ],
-          ),
-          const SizedBox(height: 40,),
-          Image.asset("images/list.gif")
-        ]),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: () => goToHome(context),
+                  child: SvgPicture.asset("images/back.svg"),
+                ),
+                Text("Select City", style: Config.bodyText1.copyWith(fontSize: 22)),
+                const SizedBox(),
+              ],
+            ),
+            const SizedBox(height: 40,),
+            Image.asset("images/list.gif")
+          ]),
+        ),
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather/splash.dart';
-
+import 'package:flutter/services.dart';
 import 'config.dart';
 
 
@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     return MaterialApp(
       theme: Config.appTheme,
       home: const SplashScreen(),

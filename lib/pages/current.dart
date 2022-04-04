@@ -10,13 +10,18 @@ class CurrentForecast extends StatelessWidget {
     humidity = item.humidity;
     feelsLike = item.feelsLike;
     pressure = item.pressure;
+    description = item.description;
+    icon = item.icon;
   }
   late final int temperature;
   late final int wind;
   late final int humidity;
   late final int feelsLike;
   late final int pressure;
+  late final String description;
+  late final String icon;
 
+ 
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -25,7 +30,7 @@ class CurrentForecast extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset("images/types/sunny.svg", height: 60),
+            SvgPicture.asset("images/conditions/$icon.svg", height: 60),
             const SizedBox(width: 10),
             RichText(
               text: TextSpan(
@@ -38,6 +43,7 @@ class CurrentForecast extends StatelessWidget {
             ),
           ],
         ),
+        Text(description, style: Config.bodyText1.copyWith(fontSize: 16)),
         const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
