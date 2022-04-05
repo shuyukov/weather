@@ -5,7 +5,7 @@ import 'package:weather/models/model.dart';
 
 class CurrentForecast extends StatelessWidget {
   CurrentForecast ({ Key? key, required Model item}) : super(key: key){
-    temperature = item.temperature;
+    temperature = item.temp.toInt();
     wind = item.wind;
     humidity = item.humidity;
     feelsLike = item.feelsLike;
@@ -26,7 +26,7 @@ class CurrentForecast extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text("Chicago", style: Config.bodyText1.copyWith(fontSize: 22)),
+        Text("Mountain View", style: Config.bodyText1.copyWith(fontSize: 22)),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

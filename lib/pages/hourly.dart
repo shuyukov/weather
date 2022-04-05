@@ -23,7 +23,7 @@ class HourlyForecast extends StatelessWidget {
           var item = items[index];
           var hour = item.hour;
           var icon = item.icon;
-          var temperature = item.temperature;
+          var temperature = item.temp.toInt();
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
@@ -32,7 +32,8 @@ class HourlyForecast extends StatelessWidget {
                 Text("$hour", style: Config.bodyText1),                
                 SvgPicture.asset("images/conditions/$icon.svg", height: 30,),
                 Text("$temperature°C", style: Config.bodyText1.copyWith(fontSize: 16)),
-              ]),
+              ],
+            ),
           );
         },
       ),

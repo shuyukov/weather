@@ -39,24 +39,32 @@ class _HomeState extends State<Home> {
           ),
         ),
         child: SafeArea(
-          child: Column(
+          child: Stack(
             children: [
-              allWeather == null ? const SizedBox() : CurrentForecast(item: allWeather!),
-              const SizedBox(height: 20),
-              allWeather == null ? const SizedBox() : HourlyForecast(items: allWeather!.hourlyWeather),
-              const SizedBox(height: 20),
-              allWeather == null ? const SizedBox() : DailyForecast(items: allWeather!.dailyWeather),
-              const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: () => goToLocations(context),
-                    child: SvgPicture.asset("images/locations.svg"),
-                  ),
-                  const SizedBox(width: 10)
-                ],
-              )
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    allWeather == null
+                        ? const SizedBox()
+                        : CurrentForecast(item: allWeather!),
+                    const SizedBox(height: 20),
+                    allWeather == null
+                        ? const SizedBox()
+                        : HourlyForecast(items: allWeather!.hourlyWeather),
+                    const SizedBox(height: 20),
+                    allWeather == null
+                        ? const SizedBox()
+                        : DailyForecast(items: allWeather!.dailyWeather),
+                  ],
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: GestureDetector(
+                  onTap: () => goToLocations(context),
+                  child: SvgPicture.asset("images/locations.svg"),
+                ),
+              ),
             ],
           ),
         ),
@@ -69,9 +77,8 @@ class _HomeState extends State<Home> {
         builder: (BuildContext context) => const Locations()));
   }
 
-
   Future getCurrentWeather() async {
-    Api().getCurrentWeather(33.44, -94.04).then((value) {
+    Api().getCurrentWeather(37.422, -122.084).then((value) {
       setState(() {
         allWeather = value;
       });

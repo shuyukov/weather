@@ -11,13 +11,13 @@ class DailyForecast extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-            padding: const EdgeInsets.all(15),      
+      padding: const EdgeInsets.all(15),      
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: const Color.fromRGBO(51, 164, 243, 1)),
       ),
-      height: 260,
-      child: ListView.builder(
+      child: ListView.separated(
+        shrinkWrap: true,
         scrollDirection: Axis.vertical,
         itemCount: 8,
         itemBuilder: (BuildContext context, int index) {
@@ -27,9 +27,8 @@ class DailyForecast extends StatelessWidget {
           var minTemp = item.minTemp;
           var maxTemp = item.maxTemp;
           return Container(
-            padding: const EdgeInsets.only(bottom: 15),
+            padding: const EdgeInsets.symmetric(vertical: 2),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(flex: 3, child: Text(day, style: Config.bodyText1)),                
                 Expanded(flex: 3, child: SvgPicture.asset("images/conditions/$icon.svg", height: 15,)),
@@ -38,6 +37,11 @@ class DailyForecast extends StatelessWidget {
               ]),
           );
         },
+        separatorBuilder: (BuildContext context, int index) {
+          return const Divider(
+            color: Color.fromRGBO(51, 164, 243, 1)
+          );
+        }
       ),
     );
   }

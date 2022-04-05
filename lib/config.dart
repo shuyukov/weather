@@ -29,6 +29,6 @@ static InputBorder inputBorder = OutlineInputBorder(
   borderSide: const BorderSide(
     color: Colors.white    
   ),
-  borderRadius: BorderRadius.circular(100),
+  borderRadius: BorderRadius.circular(30),
 );
 }

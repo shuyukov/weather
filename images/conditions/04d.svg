@@ -1,20 +1,10 @@
-<svg width="100" height="64" viewBox="0 0 100 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_0_383)" filter="url(#filter0_d_0_383)">
+<svg width="100" height="56" viewBox="0 0 100 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_0_215)">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M88.6201 20.0381C94.5571 20.0381 99.387 24.9061 99.387 30.8938C99.387 36.8774 94.5571 41.7455 88.6201 41.7455H41.8071C34.3571 41.7455 28.2944 35.6327 28.2944 28.1194C28.2944 20.6061 34.3571 14.4933 41.8071 14.4933C43.1945 14.4933 44.5736 14.7086 45.9011 15.1331L46.769 15.4099L47.0741 14.5466C49.9353 6.43655 57.5812 0.988159 66.099 0.988159C76.5134 0.988159 85.1569 8.85419 86.2062 19.2875L86.3031 20.2534L87.2596 20.1344C87.7873 20.0688 88.2202 20.0381 88.6201 20.0381Z" fill="#C8D0D6"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M11.8942 31.3306C5.3368 31.3306 -0.000244141 36.6908 -0.000244141 43.2814C-0.000244141 49.8678 5.3368 55.2301 11.8942 55.2301H63.6093C71.8427 55.2301 78.5382 48.5001 78.5382 40.2281C78.5382 31.956 71.8427 25.226 63.6093 25.226C62.0777 25.226 60.5543 25.4639 59.0865 25.9294L58.13 26.2349L57.792 25.2834C54.6318 16.3552 46.184 10.3572 36.7736 10.3572C25.2688 10.3572 15.7202 19.0189 14.5617 30.5042L14.4545 31.5684L13.3991 31.4372C12.8136 31.3634 12.3354 31.3306 11.8942 31.3306Z" fill="#EDF3F9"/>
 </g>
 <defs>
-<filter id="filter0_d_0_383" x="-4" y="0" width="108" height="64" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dy="4"/>
-<feGaussianBlur stdDeviation="2"/>
-<feComposite in2="hardAlpha" operator="out"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_383"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_383" result="shape"/>
-</filter>
-<clipPath id="clip0_0_383">
+<clipPath id="clip0_0_215">
 <rect width="100" height="56" fill="white"/>
 </clipPath>
 </defs>
