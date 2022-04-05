@@ -39,32 +39,22 @@ class _HomeState extends State<Home> {
           ),
         ),
         child: SafeArea(
-          child: Stack(
+          child: Column(
             children: [
-              SingleChildScrollView(
-                child: Column(
-                  children: [
-                    allWeather == null
-                        ? const SizedBox()
-                        : CurrentForecast(item: allWeather!),
-                    const SizedBox(height: 20),
-                    allWeather == null
-                        ? const SizedBox()
-                        : HourlyForecast(items: allWeather!.hourlyWeather),
-                    const SizedBox(height: 20),
-                    allWeather == null
-                        ? const SizedBox()
-                        : DailyForecast(items: allWeather!.dailyWeather),
-                  ],
-                ),
-              ),
+              allWeather == null ? const SizedBox() : CurrentForecast(item: allWeather!),
+              const SizedBox(height: 20),
+              allWeather == null ? const SizedBox() : HourlyForecast(items: allWeather!.hourlyWeather),
+              const SizedBox(height: 20),
+              Expanded(child: allWeather == null ? const SizedBox() : DailyForecast(items: allWeather!.dailyWeather)),
+              const SizedBox(height: 5),
               Align(
                 alignment: Alignment.bottomRight,
-                child: GestureDetector(
-                  onTap: () => goToLocations(context),
-                  child: SvgPicture.asset("images/locations.svg"),
+                child:
+                  GestureDetector(
+                    onTap: () => goToLocations(context),
+                    child: SvgPicture.asset("images/locations.svg"),
                 ),
-              ),
+              )
             ],
           ),
         ),
@@ -77,8 +67,9 @@ class _HomeState extends State<Home> {
         builder: (BuildContext context) => const Locations()));
   }
 
+
   Future getCurrentWeather() async {
-    Api().getCurrentWeather(37.422, -122.084).then((value) {
+    Api().getCurrentWeather(33.44, -94.04).then((value) {
       setState(() {
         allWeather = value;
       });

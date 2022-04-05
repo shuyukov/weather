@@ -59,7 +59,7 @@ class Locations extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Expanded(flex: 1, child: Column(
+                      Expanded(child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                         Text("Prague", maxLines: 1, style: Config.headline1.copyWith(fontSize: 24)),
