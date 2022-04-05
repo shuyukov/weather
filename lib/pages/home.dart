@@ -69,7 +69,7 @@ class _HomeState extends State<Home> {
 
 
   Future getCurrentWeather() async {
-    Api().getCurrentWeather(33.44, -94.04).then((value) {
+    Api().getCurrentWeather(37.422, -122.084).then((value) {
       setState(() {
         allWeather = value;
       });

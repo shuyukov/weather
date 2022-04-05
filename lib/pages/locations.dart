@@ -7,6 +7,11 @@ class Locations extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    List cities = List.generate(15, (index) {
+      return;
+    });
+
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
@@ -49,28 +54,45 @@ class Locations extends StatelessWidget {
             const SizedBox(height: 20),
             Expanded(child: ListView.separated(
               scrollDirection: Axis.vertical,
-              itemCount: 20,
+              itemCount: cities.length,
               itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: const Color.fromRGBO(51, 164, 243, 1)),
+                return Dismissible(key: UniqueKey(),
+                direction: DismissDirection.endToStart,
+                onDismissed: (_) {
+                setState(() {
+                  cities.removeAt(index);
+                });
+                },
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: const Color.fromRGBO(51, 164, 243, 1)),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                          Text("Prague", maxLines: 1, style: Config.headline1.copyWith(fontSize: 24)),
+                          Text("cloudy", style: Config.bodyText1,),
+                        ],),),
+                        Row(children: [
+                          SvgPicture.asset("images/conditions/01d.svg", height: 40),
+                          const SizedBox(width: 10),
+                          Text("22°C", style: Config.bodyText1.copyWith(fontSize: 20)),
+                        ],),
+                    ]),
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                        Text("Prague", maxLines: 1, style: Config.headline1.copyWith(fontSize: 24)),
-                        Text("cloudy", style: Config.bodyText1,),
-                      ],),),
-                      Row(children: [
-                        SvgPicture.asset("images/conditions/01d.svg", height: 40),
-                        const SizedBox(width: 10),
-                        Text("22°C", style: Config.bodyText1.copyWith(fontSize: 20)),
-                      ],),
-                  ]),
+                  background: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    alignment: Alignment.centerRight,
+                    child: const Icon(Icons.delete, color: Colors.white),
+                  ),
                 );
               },
               separatorBuilder: (BuildContext context, int index) {
@@ -86,4 +108,6 @@ class Locations extends StatelessWidget {
   void goToHome(BuildContext context) {
     Navigator.of(context).pop();
   }
+
+  void setState(Null Function() param0) {}
 }
