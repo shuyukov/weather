@@ -1,8 +1,8 @@
-// import 'package:freezed_annotation/freezed_annotation.dart';
-
+import 'dart:convert';
 import 'package:intl/intl.dart';
 
-class Model {
+class AllWeather {
+  String name = "";
   double lat;
   double lon;
   int temp;
@@ -15,7 +15,7 @@ class Model {
   List<HourlyList> hourlyWeather;
   List<DailyList> dailyWeather;
 
-  Model({
+  AllWeather({
     required this.lat,
     required this.lon,
     required this.temp,
@@ -29,19 +29,25 @@ class Model {
     required this.dailyWeather,
   });
 
-  factory Model.fromJSON(Map<String, dynamic> json) {
-    return Model(
+  factory AllWeather.fromJSON(Map<String, dynamic> json) {
+    return AllWeather(
       lat: json["lat"],
       lon: json["lon"],
       temp: json["current"]["temp"].toInt(),
-      wind: (json["current"]["wind_speed"] as double).toInt(),
+      wind: (json["current"]["wind_speed"]).toInt(),
       humidity: json["current"]["humidity"],
       feelsLike: json["current"]["feels_like"].toInt(),
       pressure: json["current"]["pressure"],
       description: json["current"]["weather"][0]["description"],
       icon: json["current"]["weather"][0]["icon"],
-      hourlyWeather: (json["hourly"] as List<dynamic>).map((e) => HourlyList.fromJSON(e as Map<String, dynamic>)).toList(),
-      dailyWeather: (json["daily"] as List<dynamic>).map((e) => DailyList.fromJSON(e as Map<String, dynamic>)).toList(),
+      hourlyWeather: (json["hourly"] as List<dynamic>)
+          .map((e) => HourlyList.fromJSON(
+              e as Map<String, dynamic>, json["timezone_offset"]))
+          .toList(),
+      dailyWeather: (json["daily"] as List<dynamic>)
+          .map((e) => DailyList.fromJSON(
+              e as Map<String, dynamic>, json["timezone_offset"]))
+          .toList(),
     );
   }
 }
@@ -57,8 +63,10 @@ class HourlyList {
     required this.icon,
   });
 
-  factory HourlyList.fromJSON(Map<String, dynamic> json) {
-    var hour = DateTime.fromMillisecondsSinceEpoch(json["dt"] * 1000).hour;
+  factory HourlyList.fromJSON(Map<String, dynamic> json, int timezoneOffset) {
+    var hour = DateTime.fromMillisecondsSinceEpoch(
+            (json["dt"] + timezoneOffset) * 1000)
+        .hour;
     return HourlyList(
       hour: hour,
       temp: json["temp"].toInt(),
@@ -80,14 +88,54 @@ class DailyList {
     required this.maxTemp,
   });
 
-  factory DailyList.fromJSON(Map<String, dynamic> json) {
-    var date = DateTime.fromMillisecondsSinceEpoch(json["dt"] * 1000);
+  factory DailyList.fromJSON(Map<String, dynamic> json, int timezoneOffset) {
+    var date = DateTime.fromMillisecondsSinceEpoch(
+        (json["dt"] + timezoneOffset) * 1000);
     var day = DateFormat('EEEE').format(date);
     return DailyList(
       day: day,
       icon: json["weather"][0]["icon"],
       minTemp: json["temp"]["min"].toInt(),
       maxTemp: json["temp"]["max"].toInt(),
-      );
+    );
   }
+}
+
+class Cities {
+  String city;
+  double lat;
+  double lon;
+
+  Cities({
+    required this.city,
+    required this.lat,
+    required this.lon,
+  });
+
+  factory Cities.fromJSON(Map<String, dynamic> json) {
+    return Cities(
+      city: json["name"],
+      lat: json["coord"]["lat"],
+      lon: json["coord"]["lon"],
+    );
+  }
+
+  static List<Cities> listFromBody(List<dynamic> body) =>
+      body.map((e) => Cities.fromJSON(e as Map<String, dynamic>)).toList();
+
+  Map<String, dynamic> toJson() => {
+        "name": city,
+        "coord": {"lat": lat, "lon": lon},
+      };
+
+  static String jsonFromList(List<Cities> citiesList) =>
+      jsonEncode(citiesList.map((e) => e.toJson()).toList());
+  
+  factory Cities.fromWeather(AllWeather item) {
+    return Cities(
+      city: item.name,
+      lat: item.lat,
+      lon: item.lon,
+    );
+  } 
 }
