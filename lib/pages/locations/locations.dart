@@ -17,14 +17,13 @@ class _LocationsState extends State<Locations> {
   List<AllWeather> citiesList = [];
   bool isLoading = true;
   List<Cities> tipsList = [];
-  String enteredCity = "";
-
   final TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
     getFavCitiesList();
-    // getHintsList();
+    controller.addListener(getHintsList);
+    getHintsList();
     super.initState();
   }
 
@@ -60,7 +59,7 @@ class _LocationsState extends State<Locations> {
               ),
               const SizedBox(height: 20),
               TextField(
-                controller: TextEditingController(text: enteredCity),
+                controller: controller,
                 cursorColor: const Color.fromRGBO(147, 212, 255, 1),
                 style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
@@ -72,23 +71,18 @@ class _LocationsState extends State<Locations> {
                   labelText: "Search for a city",
                 ),
                 onSubmitted: setEnteredCity,
-                // onChanged: (text) {
-                //   getHintsList(text);
-                //   // controller.selection = TextSelection.fromPosition(TextPosition(offset: controller.text.length));
-                //   // controller.selection = TextSelection(baseOffset: text.length, extentOffset: text.length);
-                // },
               ),
               const SizedBox(height: 10),
-              // SizedBox(
-              //   height: 30,
-              //   child: ListView.separated(
-              //     scrollDirection: Axis.horizontal,
-              //     itemCount: tipsList.length,
-              //     itemBuilder: (context, index) => hintList(tipsList[index]),
-              //     separatorBuilder: (context, index) =>
-              //         const SizedBox(width: 10),
-              //   ),
-              // ),
+              SizedBox(
+                height: 30,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: tipsList.length,
+                  itemBuilder: (context, index) => hintList(tipsList[index]),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(width: 10),
+                ),
+              ),
               Expanded(
                 child: isLoading == true
                     ? const Center(
@@ -130,13 +124,13 @@ class _LocationsState extends State<Locations> {
     });
   }
 
-  // Widget hintList(Cities e) => ActionChip(
-  //       label: Text(e.city, style: Config.bodyText1),
-  //       backgroundColor: const Color.fromRGBO(117, 186, 255, 1),
-  //       onPressed: () {
-  //         setEnteredCity(e.city);
-  //       },
-  //     );
+  Widget hintList(Cities e) => ActionChip(
+        label: Text(e.city, style: Config.bodyText1),
+        backgroundColor: const Color.fromRGBO(117, 186, 255, 1),
+        onPressed: () {
+          setEnteredCity(e.city);
+        },
+      );
 
   void setEnteredCity(String value) async {
     setState(() {
@@ -151,8 +145,7 @@ class _LocationsState extends State<Locations> {
     }
     setState(() {
       isLoading = false;
-      // tipsList = [];
-      enteredCity = "";
+      controller.text = "";
     });
   }
 
@@ -164,11 +157,10 @@ class _LocationsState extends State<Locations> {
     });
   }
 
-  // Future getHintsList([String enteredCity = ""]) async {
-  //   this.enteredCity = enteredCity;
-  //   final items = await WeatherService().getTipsList(enteredCity);
-  //   setState(() {
-  //     tipsList = items;
-  //   });
-  // }
+  Future getHintsList() async {
+    final items = await WeatherService().getTipsList(controller.text);
+    setState(() {
+      tipsList = items;
+    });
+  }
 }

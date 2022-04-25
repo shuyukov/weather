@@ -5,8 +5,10 @@ import 'package:weather/repositories/network.dart';
 class WeatherService {
   Future<AllWeather?> getWeatherByCityName(String enteredCity) async {
     final cities = await StorageRepository().getCitiesList();
-    final enteredCityList =
-        cities.where((element) => element.city.toLowerCase() == enteredCity.toLowerCase()).toList();
+    final enteredCityList = cities
+        .where((element) =>
+            element.city.toLowerCase() == enteredCity.toLowerCase())
+        .toList();
     if (enteredCityList.isEmpty) {
       return null;
     }
@@ -30,13 +32,15 @@ class WeatherService {
     return items;
   }
 
-  // Future<List<Cities>> getTipsList([String enteredCity = ""]) async{
-  //   if(enteredCity.length <= 3){
-  //     return [];
-  //   }
-  //   final cities = await StorageRepository().getCitiesList();
-  //   final matchedCityList =
-  //       cities.where((element) => element.city.toLowerCase().contains(enteredCity.toLowerCase())).toList();
-  //   return matchedCityList;
-  // }
+  Future<List<Cities>> getTipsList([String enteredCity = ""]) async {
+    if (enteredCity.isEmpty) {
+      return [];
+    }
+    final cities = await StorageRepository().getCitiesList();
+    final matchedCityList = cities
+        .where((element) =>
+            element.city.toLowerCase().contains(enteredCity.toLowerCase()))
+        .toList();
+    return matchedCityList;
+  }
 }
