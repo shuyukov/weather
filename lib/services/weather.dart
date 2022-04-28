@@ -21,15 +21,9 @@ class WeatherService {
 
   Future<List<AllWeather>> getFavWeatherList() async {
     final result = await StorageRepository().readFavCities();
-    final List<AllWeather> items = [];
-    await Future.wait(result
-        .map((e) => WeatherService().getWeatherByCityName(e.city).then((value) {
-              if (value != null) {
-                items.add(value);
-              }
-            }))
+    return await Future.wait(result
+        .map((e) => getWeatherByCityName(e.city).then((value)=>value!))
         .toList());
-    return items;
   }
 
   Future<List<Cities>> getTipsList([String enteredCity = ""]) async {
@@ -43,4 +37,5 @@ class WeatherService {
         .toList();
     return matchedCityList;
   }
+
 }

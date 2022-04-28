@@ -5,6 +5,7 @@ import 'package:weather/models/model.dart';
 import 'package:weather/pages/locations/list.dart';
 import 'package:weather/repositories/local.dart';
 import 'package:weather/services/weather.dart';
+import 'package:weather/ui_kit/loader.dart';
 
 class Locations extends StatefulWidget {
   const Locations({Key? key}) : super(key: key);
@@ -14,15 +15,15 @@ class Locations extends StatefulWidget {
 }
 
 class _LocationsState extends State<Locations> {
-  List<AllWeather> citiesList = [];
-  bool isLoading = true;
-  List<Cities> tipsList = [];
-  final TextEditingController controller = TextEditingController();
+  List<AllWeather> _citiesList = [];
+  bool _isLoading = true;
+  List<Cities> _tipsList = [];
+  final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
     getFavCitiesList();
-    controller.addListener(getHintsList);
+    _controller.addListener(getHintsList);
     getHintsList();
     super.initState();
   }
@@ -59,7 +60,7 @@ class _LocationsState extends State<Locations> {
               ),
               const SizedBox(height: 20),
               TextField(
-                controller: controller,
+                controller: _controller,
                 cursorColor: const Color.fromRGBO(147, 212, 255, 1),
                 style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
@@ -72,29 +73,24 @@ class _LocationsState extends State<Locations> {
                 ),
                 onSubmitted: setEnteredCity,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 5),
               SizedBox(
                 height: 30,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  itemCount: tipsList.length,
-                  itemBuilder: (context, index) => hintList(tipsList[index]),
+                  itemCount: _tipsList.length,
+                  itemBuilder: (context, index) => hintList(_tipsList[index]),
                   separatorBuilder: (context, index) =>
                       const SizedBox(width: 10),
                 ),
               ),
+              const SizedBox(height: 5),
               Expanded(
-                child: isLoading == true
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
-                          strokeWidth: 3,
-                        ),
-                      )
+                child: _isLoading == true
+                    ? circularLoader()
                     : ListView(
                         children: [
-                          ...citiesList
+                          ..._citiesList
                               .map(
                                 (item) => ListOfCities(
                                   cityWeather: item,
@@ -118,9 +114,9 @@ class _LocationsState extends State<Locations> {
 
   void onDismissed(AllWeather item) {
     setState(() {
-      citiesList.remove(item);
+      _citiesList.remove(item);
       StorageRepository()
-          .saveFavCities(citiesList.map((e) => Cities.fromWeather(e)).toList());
+          .saveFavCities(_citiesList.map((e) => Cities.fromWeather(e)).toList());
     });
   }
 
@@ -134,33 +130,33 @@ class _LocationsState extends State<Locations> {
 
   void setEnteredCity(String value) async {
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
     final result = await WeatherService().getWeatherByCityName(value);
     if (result != null &&
-        citiesList.where((e) => e.name == result.name).isEmpty) {
-      citiesList.add(result);
+        _citiesList.where((e) => e.name == result.name).isEmpty) {
+      _citiesList.add(result);
       StorageRepository()
-          .saveFavCities(citiesList.map((e) => Cities.fromWeather(e)).toList());
+          .saveFavCities(_citiesList.map((e) => Cities.fromWeather(e)).toList());
     }
     setState(() {
-      isLoading = false;
-      controller.text = "";
+      _isLoading = false;
+      _controller.text = "";
     });
   }
 
   Future getFavCitiesList() async {
     final items = await WeatherService().getFavWeatherList();
     setState(() {
-      citiesList = items;
-      isLoading = false;
+      _citiesList = items;
+      _isLoading = false;
     });
   }
 
   Future getHintsList() async {
-    final items = await WeatherService().getTipsList(controller.text);
+    final items = await WeatherService().getTipsList(_controller.text);
     setState(() {
-      tipsList = items;
+      _tipsList = items;
     });
   }
 }

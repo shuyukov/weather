@@ -8,6 +8,7 @@ import 'package:weather/pages/home/daily.dart';
 import 'package:weather/pages/home/hourly.dart';
 import 'package:weather/pages/locations/locations.dart';
 import 'package:weather/services/weather.dart';
+import 'package:weather/ui_kit/loader.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -17,9 +18,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final controller = PageController();
-  List<AllWeather> citiesList = [];
-  bool isLoading = true;
+  final _controller = PageController();
+  List<AllWeather> _citiesList = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -44,32 +45,22 @@ class _HomeState extends State<Home> {
         child: SafeArea(
           child: Column(
             children: [
-              isLoading == true
-                  ? const Expanded(
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
-                          strokeWidth: 3,
-                        ),
-                      ),
-                    )
-                  : (citiesList.isEmpty)
-                      ? Expanded(
-                          child: Center(
+              Expanded(
+                child: _isLoading == true
+                    ? circularLoader()
+                    : (_citiesList.isEmpty)
+                        ? Center(
                             child: Text(
                               "There are no cities here yet.\nTap the button below to add.",
                               style: Config.bodyText1
                                   .copyWith(fontSize: 16, height: 1.5),
                             ),
-                          ),
-                        )
-                      : Expanded(
-                          child: PageView.builder(
-                            controller: controller,
-                            itemCount: citiesList.length,
+                          )
+                        : PageView.builder(
+                            controller: _controller,
+                            itemCount: _citiesList.length,
                             itemBuilder: (context, index) {
-                              final cityWeather = citiesList[index];
+                              final cityWeather = _citiesList[index];
                               return Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 10),
@@ -89,7 +80,7 @@ class _HomeState extends State<Home> {
                               );
                             },
                           ),
-                        ),
+              ),
               const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 5),
@@ -99,8 +90,8 @@ class _HomeState extends State<Home> {
                     const SizedBox(width: 32),
                     const Spacer(),
                     SmoothPageIndicator(
-                      controller: controller,
-                      count: citiesList.length,
+                      controller: _controller,
+                      count: _citiesList.length,
                       effect: const ScrollingDotsEffect(
                         dotColor: Color.fromRGBO(51, 164, 243, 1),
                         activeDotColor: Colors.white,
@@ -134,8 +125,8 @@ class _HomeState extends State<Home> {
   Future getFavCitiesList() async {
     final items = await WeatherService().getFavWeatherList();
     setState(() {
-      citiesList = items;
+      _citiesList = items;
+      _isLoading = false;   
     });
-    isLoading = false;
   }
 }

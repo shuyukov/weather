@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weather/splash.dart';
+import 'package:weather/pages/home/splash.dart';
 import 'package:flutter/services.dart';
 import 'config.dart';
 
