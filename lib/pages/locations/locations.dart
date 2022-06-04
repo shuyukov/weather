@@ -154,7 +154,7 @@ class _LocationsState extends State<Locations> {
   }
 
   Future getHintsList() async {
-    final items = await WeatherService().getTipsList(_controller.text);
+    final items = await WeatherService().getHintList(_controller.text);
     setState(() {
       _tipsList = items;
     });

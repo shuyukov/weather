@@ -26,8 +26,8 @@ class WeatherService {
         .toList());
   }
 
-  Future<List<Cities>> getTipsList([String enteredCity = ""]) async {
-    if (enteredCity.isEmpty) {
+  Future<List<Cities>> getHintList([String enteredCity = ""]) async {
+    if (enteredCity.isEmpty || enteredCity.length <=2) {
       return [];
     }
     final cities = await StorageRepository().getCitiesList();
@@ -35,6 +35,8 @@ class WeatherService {
         .where((element) =>
             element.city.toLowerCase().contains(enteredCity.toLowerCase()))
         .toList();
+    final uniqueCities = matchedCityList.map((e) => e.city).toSet();
+    matchedCityList.retainWhere((e) => uniqueCities.remove(e.city));
     return matchedCityList;
   }
 
