@@ -1,16 +1,15 @@
-# weather
+Шуюков Иван
 
-A new Flutter project.
+Тестовое задание Mobile (Flutter)
 
-## Getting Started
+Приложение для просмотра информации о погоде, реализовано на [One Call API от OpenWeather](https://openweathermap.org/api/one-call-api).
+Координаты города для запроса к API загружаются из [локального репозитория](https://github.com/shuyukov/weather/blob/main/assets/cities.json).
+В приложении три экрана: Splash, Home, Locations.
+- Splash: используется для загрузки списка городов из локального репозитория.
+- Home: содержит информацию о погоде в сохраненных городах. Для каждого города отображается текущая погода, почасовая погода на ближайшие сутки, погода на неделю. Навигация между городами реализована с помощью горизонтальных свайпов. Если города в списке отсутствуют, выводится сообщение о необходимости добавить первый город.
+- Locations: экран добавления новых городов и вывода их списка с текущей температурой. При вводе более 2 символов в строку поиска появляются подсказки из городов в локальном хранилище. Для удаления города из списка используется свайп влево. При возврате на экран Home список городов и погоды обновляется.
 
-This project is a starting point for a Flutter application.
+Иконки погоды взяты из [файла](https://www.figma.com/community/file/955978734883254712).
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Приложение тестировалось на эмуляторе iPhone 11 Pro и iPhone SE второго поколения.
+С недавнего времени для работы с API от OpenWeather необходим VPN. Соответственно, погода в приложении без включенного VPN не загрузится.
