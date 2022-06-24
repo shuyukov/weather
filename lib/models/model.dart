@@ -115,10 +115,18 @@ class Cities {
   factory Cities.fromJSON(Map<String, dynamic> json) {
     return Cities(
       city: json["name"],
-      lat: json["coord"]["lat"],
-      lon: json["coord"]["lon"],
+      lat: json["coord"]["lat"].toDouble(),
+      lon: json["coord"]["lon"].toDouble(),
     );
   }
+
+  factory Cities.fromDB(Map<String, dynamic> json) {
+    return Cities(
+      city: json["city"],
+      lat: json["lat"],
+      lon: json["lon"],
+    );
+  } 
 
   static List<Cities> listFromBody(List<dynamic> body) =>
       body.map((e) => Cities.fromJSON(e as Map<String, dynamic>)).toList();
@@ -130,12 +138,12 @@ class Cities {
 
   static String jsonFromList(List<Cities> citiesList) =>
       jsonEncode(citiesList.map((e) => e.toJson()).toList());
-  
+
   factory Cities.fromWeather(AllWeather item) {
     return Cities(
       city: item.name,
       lat: item.lat,
       lon: item.lon,
     );
-  } 
+  }
 }
