@@ -1,29 +1,31 @@
+import 'package:weather/data_providers/network.dart';
 import 'package:weather/models/model.dart';
 import 'package:weather/repositories/local.dart';
-import 'package:weather/repositories/network.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
 
-class WeatherService {
-  Future<AllWeather?> getWeatherByCityName(String enteredCity) async {
-    final cities = await StorageRepository().getCitiesList();
+class LocalDataProvider {
+  final LocalRepositories _localRepositories;
+  LocalDataProvider(this._localRepositories);
+
+  Future<AllWeather?> getWeatherByCity(String enteredCity) async {
+    final cities = await _localRepositories.getListOfAllCities();
     final enteredCityList = cities
-        .where((element) =>
-            element.city.toLowerCase() == enteredCity.toLowerCase())
+        .where((e) =>
+            e.city.toLowerCase() == enteredCity.toLowerCase())
         .toList();
     if (enteredCityList.isEmpty) {
       return null;
     }
     final currentCity = enteredCityList[0];
-    final weatherByCityName =
-        await WeaherAPI().getCurrentWeather(currentCity.lat, currentCity.lon);
-    weatherByCityName.name = currentCity.city;
-    return weatherByCityName;
+    final weatherByCity =
+        await ApiDataProvider().getCurrentWeather(currentCity.lat, currentCity.lon);
+    weatherByCity.city = currentCity.city;
+    return weatherByCity;
   }
 
   Future<List<AllWeather>> getFavWeatherList() async {
-    final result = await StorageRepository().readFavCities();
+    final result = await _localRepositories.getFavCitiesList();
     return await Future.wait(result
-        .map((e) => getWeatherByCityName(e.city).then((value)=>value!))
+        .map((e) => getWeatherByCity(e.city).then((value)=>value!))
         .toList());
   }
 
@@ -31,7 +33,7 @@ class WeatherService {
     if (enteredCity.isEmpty || enteredCity.length <=2) {
       return [];
     }
-    final cities = await StorageRepository().getCitiesList();
+    final cities = await _localRepositories.getListOfAllCities();
     final matchedCityList = cities
         .where((element) =>
             element.city.toLowerCase().contains(enteredCity.toLowerCase()))

@@ -12,7 +12,7 @@ class CurrentForecast extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 10),        
-        Text(items.name, style: Config.bodyText1.copyWith(fontSize: 24)),
+        Text(items.city, style: Config.bodyText1.copyWith(fontSize: 24)),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:weather/config.dart';
+import 'package:weather/data_providers/local.dart';
 import 'package:weather/models/model.dart';
 import 'package:weather/pages/home/current.dart';
 import 'package:weather/pages/home/daily.dart';
 import 'package:weather/pages/home/hourly.dart';
 import 'package:weather/pages/locations/locations.dart';
-import 'package:weather/services/weather.dart';
+import 'package:weather/repositories/local.dart';
 import 'package:weather/ui_kit/loader.dart';
 
 class Home extends StatefulWidget {
@@ -123,7 +125,7 @@ class _HomeState extends State<Home> {
   }
 
   Future getFavCitiesList() async {
-    final items = await WeatherService().getFavWeatherList();
+    final items = await LocalDataProvider(RepositoryProvider.of<LocalRepositories>(context)).getFavWeatherList();
     setState(() {
       _citiesList = items;
       _isLoading = false;   

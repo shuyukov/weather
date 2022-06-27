@@ -17,16 +17,16 @@ abstract class AppEvent extends Equatable {
 class AppInitilised extends AppEvent {}
 
 class AppBloc extends Bloc<AppEvent, AppState> {
-  AppBloc({required StorageRepository storageRepository})
+  AppBloc({required LocalRepositories storageRepository})
       : _storageRepository = storageRepository,
         super(AppState.uninitilised) {
     on<AppInitilised>(_onAppInitilised);
     _initServices();
   }
 
-  final StorageRepository _storageRepository;
+  final LocalRepositories _storageRepository;
 
-  void _onAppInitilised(AppInitilised event, Emitter<AppState> emit) async {
+  void _onAppInitilised(AppInitilised event, Emitter<AppState> emit) {
     emit(AppState.initilised);
   }
 

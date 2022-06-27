@@ -20,7 +20,7 @@ void main() {
 class App extends StatelessWidget {
   App({Key? key}) : super(key: key);
 
-  final StorageRepository _storageRepository = StorageRepository();
+  final LocalRepositories _storageRepository = LocalRepositories();
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,11 @@
 import "package:flutter/material.dart";
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:weather/config.dart';
+import 'package:weather/data_providers/local.dart';
 import 'package:weather/models/model.dart';
 import 'package:weather/pages/locations/list.dart';
 import 'package:weather/repositories/local.dart';
-import 'package:weather/services/weather.dart';
 import 'package:weather/ui_kit/loader.dart';
 
 class Locations extends StatefulWidget {
@@ -19,6 +20,7 @@ class _LocationsState extends State<Locations> {
   bool _isLoading = true;
   List<Cities> _tipsList = [];
   final TextEditingController _controller = TextEditingController();
+  LocalRepositories _localRepositories(BuildContext context) => RepositoryProvider.of<LocalRepositories>(context);
 
   @override
   void initState() {
@@ -27,7 +29,7 @@ class _LocationsState extends State<Locations> {
     getHintsList();
     super.initState();
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,8 +117,7 @@ class _LocationsState extends State<Locations> {
   void onDismissed(AllWeather item) {
     setState(() {
       _citiesList.remove(item);
-      StorageRepository()
-          .saveFavCities(_citiesList.map((e) => Cities.fromWeather(e)).toList());
+      _localRepositories(context).delFavCity(Cities.fromWeather(item));
     });
   }
 
@@ -132,12 +133,11 @@ class _LocationsState extends State<Locations> {
     setState(() {
       _isLoading = true;
     });
-    final result = await WeatherService().getWeatherByCityName(value);
+    final result = await LocalDataProvider(_localRepositories(context)).getWeatherByCity(value);
     if (result != null &&
-        _citiesList.where((e) => e.name == result.name).isEmpty) {
+        _citiesList.where((e) => e.city == result.city).isEmpty) {
       _citiesList.add(result);
-      StorageRepository()
-          .saveFavCities(_citiesList.map((e) => Cities.fromWeather(e)).toList());
+      _localRepositories(context).saveFavCity(Cities.fromWeather(result));
     }
     setState(() {
       _isLoading = false;
@@ -146,7 +146,7 @@ class _LocationsState extends State<Locations> {
   }
 
   Future getFavCitiesList() async {
-    final items = await WeatherService().getFavWeatherList();
+    final items = await LocalDataProvider(_localRepositories(context)).getFavWeatherList();
     setState(() {
       _citiesList = items;
       _isLoading = false;
@@ -154,7 +154,7 @@ class _LocationsState extends State<Locations> {
   }
 
   Future getHintsList() async {
-    final items = await WeatherService().getHintList(_controller.text);
+    final items = await LocalDataProvider(_localRepositories(context)).getHintList(_controller.text);
     setState(() {
       _tipsList = items;
     });

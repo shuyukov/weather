@@ -32,7 +32,7 @@ class ListOfCities extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      cityWeather.name,
+                      cityWeather.city,
                       maxLines: 1,
                       style: Config.headline1.copyWith(fontSize: 24),
                     ),

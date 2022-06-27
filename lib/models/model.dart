@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 
 class AllWeather {
-  String name = "";
+  String city = "";
   double lat;
   double lon;
   int temp;
@@ -120,13 +120,13 @@ class Cities {
     );
   }
 
-  factory Cities.fromDB(Map<String, dynamic> json) {
+  factory Cities.fromDB(Map<String, dynamic> map) {
     return Cities(
-      city: json["city"],
-      lat: json["lat"],
-      lon: json["lon"],
+      city: map["city"],
+      lat: map["lat"],
+      lon: map["lon"],
     );
-  } 
+  }
 
   static List<Cities> listFromBody(List<dynamic> body) =>
       body.map((e) => Cities.fromJSON(e as Map<String, dynamic>)).toList();
@@ -141,7 +141,7 @@ class Cities {
 
   factory Cities.fromWeather(AllWeather item) {
     return Cities(
-      city: item.name,
+      city: item.city,
       lat: item.lat,
       lon: item.lon,
     );
