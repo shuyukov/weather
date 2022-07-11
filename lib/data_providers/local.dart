@@ -1,46 +1,55 @@
-import 'package:weather/data_providers/network.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:weather/models/model.dart';
-import 'package:weather/repositories/local.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 
 class LocalDataProvider {
-  final LocalRepositories _localRepositories;
-  LocalDataProvider(this._localRepositories);
+  late final Database _database;
 
-  Future<AllWeather?> getWeatherByCity(String enteredCity) async {
-    final cities = await _localRepositories.getListOfAllCities();
-    final enteredCityList = cities
-        .where((e) =>
-            e.city.toLowerCase() == enteredCity.toLowerCase())
-        .toList();
-    if (enteredCityList.isEmpty) {
-      return null;
+  List<Cities> allCities = [];
+  List<Cities> listFromTable = [];
+
+  final String favCities = 'favCities';
+  final String columnId = '_id';
+  final String columnCity = 'city';
+  final String columnLat = 'lat';
+  final String columnLon = 'lon';
+
+  Future init() async {
+    String databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, "favCities.db");
+    _database = await openDatabase(path, version: 1,
+        onCreate: (Database database, int version) async {
+      await database.execute(
+          'create table if not exists $favCities ($columnId integer primary key autoincrement, $columnCity text not null, $columnLat double not null, $columnLon double not null)');
+    });
+    getListOfAllCities();
+  }
+
+  Future<List<Cities>> getListOfAllCities() async {
+    if (allCities.isEmpty) {
+      final String response = await rootBundle.loadString('assets/cities.json');
+      final data = await json.decode(response);
+      allCities = Cities.listFromJson(data);
     }
-    final currentCity = enteredCityList[0];
-    final weatherByCity =
-        await ApiDataProvider().getCurrentWeather(currentCity.lat, currentCity.lon);
-    weatherByCity.city = currentCity.city;
-    return weatherByCity;
+    return allCities;
   }
 
-  Future<List<AllWeather>> getFavWeatherList() async {
-    final result = await _localRepositories.getFavCitiesList();
-    return await Future.wait(result
-        .map((e) => getWeatherByCity(e.city).then((value)=>value!))
-        .toList());
-  }
-
-  Future<List<Cities>> getHintList([String enteredCity = ""]) async {
-    if (enteredCity.isEmpty || enteredCity.length <=2) {
-      return [];
-    }
-    final cities = await _localRepositories.getListOfAllCities();
-    final matchedCityList = cities
-        .where((element) =>
-            element.city.toLowerCase().contains(enteredCity.toLowerCase()))
+  Future<List<Cities>> getFavCitiesList() async {
+    final favCitiesList = (await _database.rawQuery('SELECT * FROM $favCities'))
+        .map((e) => Cities.fromDB(e))
         .toList();
-    final uniqueCities = matchedCityList.map((e) => e.city).toSet();
-    matchedCityList.retainWhere((e) => uniqueCities.remove(e.city));
-    return matchedCityList;
+    return favCitiesList;
   }
 
+  saveFavCity(Cities item) async {
+    await _database.rawInsert(
+        'INSERT INTO $favCities ($columnCity, $columnLat, $columnLon) VALUES(?, ?, ?)',
+        [item.city, item.lat, item.lon]);
+  }
+
+  removeFavCity(String selectedCity) async {
+    await _database.delete('DELETE FROM $favCities, where: $columnCity = ?', whereArgs: [selectedCity]);
+  }
 }

@@ -1,37 +1,31 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather/repositories/local.dart';
+import 'package:weather/repositories/cities_repository.dart';
 
 enum AppState {
   uninitilised,
   initilised,
 }
 
-abstract class AppEvent extends Equatable {
+abstract class AppEvent {
   const AppEvent();
-
-  @override
-  List<Object> get props => [];
 }
 
 class AppInitilised extends AppEvent {}
 
 class AppBloc extends Bloc<AppEvent, AppState> {
-  AppBloc({required LocalRepositories storageRepository})
-      : _storageRepository = storageRepository,
-        super(AppState.uninitilised) {
+  AppBloc(this._citiesRepository) : super(AppState.uninitilised) {
     on<AppInitilised>(_onAppInitilised);
     _initServices();
   }
 
-  final LocalRepositories _storageRepository;
+  final CitiesRepository _citiesRepository;
 
   void _onAppInitilised(AppInitilised event, Emitter<AppState> emit) {
     emit(AppState.initilised);
   }
 
   void _initServices() async {
-    await _storageRepository.init();
+    await _citiesRepository.init();
     add(AppInitilised());
   }
 }

@@ -128,7 +128,7 @@ class Cities {
     );
   }
 
-  static List<Cities> listFromBody(List<dynamic> body) =>
+  static List<Cities> listFromJson(List<dynamic> body) =>
       body.map((e) => Cities.fromJSON(e as Map<String, dynamic>)).toList();
 
   Map<String, dynamic> toJson() => {

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
-Widget circularLoader() {
-  return const Center(
-    child: CircularProgressIndicator(
-      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-      strokeWidth: 3,
-    ),
-  );
+class CircularLoader extends StatelessWidget {
+  const CircularLoader({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+        strokeWidth: 3,
+      ),
+    );
+  }
 }

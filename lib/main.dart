@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather/bloc/app_bloc.dart';
 import 'package:weather/bloc/bloc_observer.dart';
+import 'package:weather/bloc/weather_bloc.dart';
+import 'package:weather/data_providers/local.dart';
+import 'package:weather/data_providers/network.dart';
 import 'package:weather/pages/home/splash.dart';
 import 'package:flutter/services.dart';
-import 'package:weather/repositories/local.dart';
+import 'package:weather/repositories/cities_repository.dart';
 import 'config.dart';
 
 void main() {
@@ -19,18 +22,25 @@ void main() {
 
 class App extends StatelessWidget {
   App({Key? key}) : super(key: key);
-
-  final LocalRepositories _storageRepository = LocalRepositories();
+  final CitiesRepository _citiesRepository =
+      CitiesRepository(LocalDataProvider(), ApiDataProvider());
 
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider.value(
-      value: _storageRepository,
-      child: BlocProvider(
-        lazy: false,
-        create: (_) => AppBloc(
-          storageRepository: _storageRepository,
-        ),
+      value: _citiesRepository,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            lazy: false,
+            create: (_) => AppBloc(
+              _citiesRepository,
+            ),
+          ),
+          BlocProvider(
+            create: (_) => WeatherBloc(_citiesRepository),
+          ),
+        ],
         child: const AppView(),
       ),
     );
