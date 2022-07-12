@@ -11,7 +11,8 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<AppBloc, AppState>(
       listener: (context, state) {
-        goToHome(context);
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (BuildContext context) => Home()));
       },
       child: Scaffold(
         body: Container(
@@ -35,10 +36,5 @@ class SplashScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void goToHome(BuildContext context) {
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (BuildContext context) => Home()));
   }
 }

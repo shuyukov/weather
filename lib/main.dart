@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather/bloc/app_bloc.dart';
-import 'package:weather/bloc/bloc_observer.dart';
 import 'package:weather/bloc/weather_bloc.dart';
 import 'package:weather/data_providers/local.dart';
 import 'package:weather/data_providers/network.dart';
@@ -16,7 +15,6 @@ void main() {
       WidgetsFlutterBinding.ensureInitialized();
       runApp(App());
     },
-    blocObserver: AppBlocObserver(),
   );
 }
 

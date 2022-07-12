@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/widgets.dart';
 import 'package:weather/models/model.dart';
 import 'package:weather/repositories/cities_repository.dart';
 
@@ -29,7 +28,6 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     emit(LoadingCitiesListState());
     final citiesList =
         await _citiesRepository.checkAndSaveCity(event.selectedCity);
-    // state.text = "";
     emit(ClearTextFieldState());
     emit(LoadedListsState(citiesList: citiesList));
   }

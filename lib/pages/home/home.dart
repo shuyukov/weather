@@ -67,10 +67,13 @@ class Home extends StatelessWidget {
                                         children: [
                                           CurrentForecast(items: cityWeather),
                                           const SizedBox(height: 20),
-                                          HourlyForecast(items: cityWeather.hourlyWeather),
+                                          HourlyForecast(
+                                              items: cityWeather.hourlyWeather),
                                           const SizedBox(height: 20),
                                           Expanded(
-                                            child: DailyForecast(items: cityWeather.dailyWeather),
+                                            child: DailyForecast(
+                                                items:
+                                                    cityWeather.dailyWeather),
                                           ),
                                         ],
                                       ),
@@ -86,16 +89,18 @@ class Home extends StatelessWidget {
                         children: [
                           const SizedBox(width: 32),
                           const Spacer(),
-                          SmoothPageIndicator(
-                            controller: _controller,                            
-                            count: state.citiesList.length,
-                            effect: const ScrollingDotsEffect(
-                              dotColor: Color.fromRGBO(51, 164, 243, 1),
-                              activeDotColor: Colors.white,
-                              dotWidth: 7,
-                              dotHeight: 7,
-                            ),
-                          ),
+                          (state.citiesList.isNotEmpty)
+                              ? SmoothPageIndicator(
+                                  controller: _controller,
+                                  count: state.citiesList.length,
+                                  effect: const ScrollingDotsEffect(
+                                    dotColor: Color.fromRGBO(51, 164, 243, 1),
+                                    activeDotColor: Colors.white,
+                                    dotWidth: 7,
+                                    dotHeight: 7,
+                                  ),
+                                )
+                              : const Spacer(),
                           const Spacer(),
                           GestureDetector(
                             onTap: () => context
