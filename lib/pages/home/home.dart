@@ -47,39 +47,42 @@ class Home extends StatelessWidget {
                     Expanded(
                       child: (state is LoadingCitiesListState)
                           ? const CircularLoader()
-                          : (state.citiesList.isEmpty)
-                              ? Center(
-                                  child: Text(
-                                    "There are no cities here yet.\nTap the button below to add.",
-                                    style: Config.bodyText1
-                                        .copyWith(fontSize: 16, height: 1.5),
-                                  ),
-                                )
-                              : PageView.builder(
-                                  controller: _controller,
-                                  itemCount: state.citiesList.length,
-                                  itemBuilder: (context, index) {
-                                    final cityWeather = state.citiesList[index];
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      child: Column(
-                                        children: [
-                                          CurrentForecast(items: cityWeather),
-                                          const SizedBox(height: 20),
-                                          HourlyForecast(
-                                              items: cityWeather.hourlyWeather),
-                                          const SizedBox(height: 20),
-                                          Expanded(
-                                            child: DailyForecast(
-                                                items:
-                                                    cityWeather.dailyWeather),
-                                          ),
-                                        ],
+                              : (state.citiesList.isEmpty)
+                                  ? Center(
+                                      child: Text(
+                                        "There are no cities here yet.\nTap the button below to add.",
+                                        style: Config.bodyText1.copyWith(
+                                            fontSize: 16, height: 1.5),
                                       ),
-                                    );
-                                  },
-                                ),
+                                    )
+                                  : PageView.builder(
+                                      controller: _controller,
+                                      itemCount: state.citiesList.length,
+                                      itemBuilder: (context, index) {
+                                        final cityWeather =
+                                            state.citiesList[index];
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          child: Column(
+                                            children: [
+                                              CurrentForecast(
+                                                  items: cityWeather),
+                                              const SizedBox(height: 20),
+                                              HourlyForecast(
+                                                  items: cityWeather
+                                                      .hourlyWeather),
+                                              const SizedBox(height: 20),
+                                              Expanded(
+                                                child: DailyForecast(
+                                                    items: cityWeather
+                                                        .dailyWeather),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
                     ),
                     const SizedBox(height: 10),
                     Padding(
