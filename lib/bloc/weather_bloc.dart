@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/widgets.dart';
 import 'package:weather/models/model.dart';
 import 'package:weather/repositories/cities_repository.dart';
 
@@ -7,9 +8,9 @@ part 'weather_state.dart';
 
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   WeatherBloc(this._citiesRepository) : super(LoadingCitiesListState()) {
+    on<LoadingCitiesEvent>(_getFavCitiesList);
     on<LoadingHintsEvent>(_getHintsList);
     on<AddCityEvent>(_setEnteredCity);
-    on<LoadingCitiesEvent>(_getFavCitiesList);
     on<RemoveCityEvent>(_removeFavCity);
     on<ToLocationsEvent>(_toLocations);
     on<ToHomeEvent>(_toHome);
@@ -29,11 +30,12 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     final citiesList =
         await _citiesRepository.checkAndSaveCity(event.selectedCity);
     // state.text = "";
+    emit(ClearTextFieldState());
     emit(LoadedListsState(citiesList: citiesList));
   }
 
   Future _getFavCitiesList(
-      LoadingCitiesEvent event, Emitter<WeatherState> emit) async {
+    LoadingCitiesEvent event, Emitter<WeatherState> emit) async {
     emit(LoadingCitiesListState());
     final citiesList = await _citiesRepository.getWeatherForFavCities();
     emit(LoadedListsState(citiesList: citiesList, hintsList: []));

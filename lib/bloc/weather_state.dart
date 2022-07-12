@@ -3,7 +3,8 @@ part of 'weather_bloc.dart';
 abstract class WeatherState {
   final List<AllWeather> citiesList;
   final List<Cities> hintsList;
-  const WeatherState({this.citiesList = const [], this.hintsList = const []});
+  final TextEditingController controller = TextEditingController();
+  WeatherState({this.citiesList = const [], this.hintsList = const []});
 }
 
 class LoadingCitiesListState extends WeatherState {
@@ -19,4 +20,7 @@ class ToLocationsState extends WeatherState {
 }
 
 class ToHomeState extends WeatherState {
+}
+
+class ClearTextFieldState extends WeatherState {
 }

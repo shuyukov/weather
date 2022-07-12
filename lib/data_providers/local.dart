@@ -50,6 +50,6 @@ class LocalDataProvider {
   }
 
   removeFavCity(String selectedCity) async {
-    await _database.delete('DELETE FROM $favCities, where: $columnCity = ?', whereArgs: [selectedCity]);
+    await _database.delete(favCities, where: '$columnCity = ?', whereArgs: [selectedCity]);
   }
 }

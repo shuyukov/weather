@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:weather/bloc/weather_bloc.dart';
 import 'package:weather/config.dart';
+import 'package:weather/pages/home/home.dart';
 import 'package:weather/pages/locations/fav_city_vh.dart';
 import 'package:weather/pages/locations/hint_vh.dart';
 import 'package:weather/ui_kit/loader.dart';
@@ -18,7 +19,12 @@ class Locations extends StatelessWidget {
       body: BlocListener<WeatherBloc, WeatherState>(
         listener: (context, state) {
           if (state is ToHomeState) {
-            Navigator.of(context).pop();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Home()));
+          }
+          if (state is ClearTextFieldState) {
+            _controller.clear();
           }
         },
         child: Container(
@@ -83,7 +89,7 @@ class Locations extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 BlocBuilder<WeatherBloc, WeatherState>(
-                  bloc: context.read<WeatherBloc>(),
+                  bloc: context.read<WeatherBloc>()..add(LoadingCitiesEvent()),
                   builder: (context, state) {
                     return Expanded(
                       child: state is LoadingCitiesListState
