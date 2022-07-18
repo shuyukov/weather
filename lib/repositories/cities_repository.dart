@@ -20,17 +20,6 @@ class CitiesRepository {
     await _localDataProvider.removeFavCity(selectedCity);
   }
 
-  Future<List<AllWeather>> checkAndSaveCity(String enteredCity) async {
-    final result = await getWeatherByCity(enteredCity);
-    final citiesList = await getWeatherForFavCities();
-    if (result != null &&
-        citiesList.where((e) => e.city == result.city).isEmpty) {
-      citiesList.add(result);
-      saveFavCity(Cities.fromWeather(result));
-    }
-    return citiesList;
-  }
-
   Future<List<AllWeather>> getWeatherForFavCities() async {
     final result = await _localDataProvider.getFavCitiesList();
     return await Future.wait(result
@@ -39,7 +28,7 @@ class CitiesRepository {
   }
 
   Future<AllWeather?> getWeatherByCity(String city) async {
-    final cities = await _localDataProvider.getListOfAllCities();
+    final cities = await _localDataProvider.getDataFromFile();
     final enteredCityList = cities
         .where((e) => e.city.toLowerCase() == city.toLowerCase())
         .toList();
@@ -49,15 +38,19 @@ class CitiesRepository {
     final currentCity = enteredCityList[0];
     final weatherByCity = await _apiDataProvider.getCurrentWeather(
         currentCity.lat, currentCity.lon);
-    weatherByCity.city = currentCity.city;
-    return weatherByCity;
+    if (weatherByCity == false) {
+      return null;
+    } else {
+      weatherByCity.city = currentCity.city;
+      return weatherByCity;
+    }
   }
 
   Future<List<Cities>> getListOfHints([String enteredText = ""]) async {
     if (enteredText.isEmpty || enteredText.length <= 2) {
       return [];
     }
-    final cities = await _localDataProvider.getListOfAllCities();
+    final cities = await _localDataProvider.getDataFromFile();
     final matchedCityList = cities
         .where((element) =>
             element.city.toLowerCase().contains(enteredText.toLowerCase()))
