@@ -8,6 +8,7 @@ import 'package:weather/pages/home/current.dart';
 import 'package:weather/pages/home/daily.dart';
 import 'package:weather/pages/home/hourly.dart';
 import 'package:weather/pages/locations/locations.dart';
+import 'package:weather/ui_kit/error_message.dart';
 import 'package:weather/ui_kit/loader.dart';
 
 class Home extends StatelessWidget {
@@ -27,27 +28,32 @@ class Home extends StatelessWidget {
             );
           }
         },
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color.fromRGBO(0, 188, 248, 1),
-                Color.fromRGBO(1, 95, 231, 1)
-              ],
+        child: GestureDetector(
+          onLongPress: () async {
+            context.read<WeatherBloc>().add(LoadingCitiesEvent());
+          },
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color.fromRGBO(0, 188, 248, 1),
+                  Color.fromRGBO(1, 95, 231, 1)
+                ],
+              ),
             ),
-          ),
-          child: BlocBuilder<WeatherBloc, WeatherState>(
-            bloc: context.read<WeatherBloc>()..add(LoadingCitiesEvent()),
-            builder: (context, state) {
-              return SafeArea(
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: (state is LoadingCitiesListState)
-                          ? const CircularLoader()
-                              : (state.citiesList.isEmpty)
+            child: BlocBuilder<WeatherBloc, WeatherState>(
+              bloc: context.read<WeatherBloc>()..add(LoadingCitiesEvent()),
+              builder: (context, state) {
+                return SafeArea(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            if (state is LoadedListsState) ...[
+                              (state.citiesList.isEmpty)
                                   ? Center(
                                       child: Text(
                                         "There are no cities here yet.\nTap the button below to add.",
@@ -58,6 +64,8 @@ class Home extends StatelessWidget {
                                   : PageView.builder(
                                       controller: _controller,
                                       itemCount: state.citiesList.length,
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
                                       itemBuilder: (context, index) {
                                         final cityWeather =
                                             state.citiesList[index];
@@ -83,41 +91,49 @@ class Home extends StatelessWidget {
                                         );
                                       },
                                     ),
-                    ),
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const SizedBox(width: 32),
-                          const Spacer(),
-                          (state.citiesList.isNotEmpty)
-                              ? SmoothPageIndicator(
-                                  controller: _controller,
-                                  count: state.citiesList.length,
-                                  effect: const ScrollingDotsEffect(
-                                    dotColor: Color.fromRGBO(51, 164, 243, 1),
-                                    activeDotColor: Colors.white,
-                                    dotWidth: 7,
-                                    dotHeight: 7,
-                                  ),
-                                )
-                              : const Spacer(),
-                          const Spacer(),
-                          GestureDetector(
-                            onTap: () => context
-                                .read<WeatherBloc>()
-                                .add(ToLocationsEvent()),
-                            child: SvgPicture.asset("images/locations.svg"),
-                          ),
-                        ],
+                            ] else if (state is NetworkErrorState) ...[
+                              const ErrorMessage()
+                            ] else ...[
+                              const CircularLoader()
+                            ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              );
-            },
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(width: 32),
+                            const Spacer(),
+                            (state.citiesList.isNotEmpty)
+                                ? SmoothPageIndicator(
+                                    controller: _controller,
+                                    count: state.citiesList.length,
+                                    effect: const ScrollingDotsEffect(
+                                      dotColor: Color.fromRGBO(51, 164, 243, 1),
+                                      activeDotColor: Colors.white,
+                                      dotWidth: 7,
+                                      dotHeight: 7,
+                                    ),
+                                  )
+                                : const Spacer(),
+                            const Spacer(),
+                            GestureDetector(
+                              onTap: () => context
+                                  .read<WeatherBloc>()
+                                  .add(ToLocationsEvent()),
+                              child: SvgPicture.asset("images/locations.svg"),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),

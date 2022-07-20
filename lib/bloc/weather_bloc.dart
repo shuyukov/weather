@@ -12,8 +12,6 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     on<AddCityEvent>(_setEnteredCity);
     on<RemoveCityEvent>(_removeFavCity);
     on<ToLocationsEvent>(_toLocations);
-    on<ToHomeEvent>(_toHome);
-    add(LoadingCitiesEvent());
   }
 
   final CitiesRepository _citiesRepository;
@@ -26,33 +24,44 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
 
   Future _setEnteredCity(AddCityEvent event, Emitter<WeatherState> emit) async {
     emit(LoadingCitiesListState());
-    final citiesList =
-        await _citiesRepository.checkAndSaveCity(event.selectedCity);
-    emit(ClearTextFieldState());
-    emit(LoadedListsState(citiesList: citiesList));
+    try {
+      final result =
+          await _citiesRepository.getWeatherByCity(event.selectedCity);
+      final citiesList = await _citiesRepository.getWeatherForFavCities();
+      if (citiesList.where((e) => e.city == result.city).isEmpty) {
+        citiesList.add(result);
+        _citiesRepository.saveFavCity(Cities.fromWeather(result));
+        emit(ClearTextFieldState());
+        emit(LoadedListsState(citiesList: citiesList));
+      }
+    } catch (_) {
+      emit(ClearTextFieldState());
+      emit(NetworkErrorState());
+    }
   }
 
   Future _getFavCitiesList(
-    LoadingCitiesEvent event, Emitter<WeatherState> emit) async {
+      LoadingCitiesEvent event, Emitter<WeatherState> emit) async {
     emit(LoadingCitiesListState());
-    final citiesList = await _citiesRepository.getWeatherForFavCities();
-    emit(LoadedListsState(citiesList: citiesList, hintsList: []));
+    try {
+      final citiesList = await _citiesRepository.getWeatherForFavCities();
+      emit(LoadedListsState(citiesList: citiesList, hintsList: []));
+    } catch (_) {
+      emit(NetworkErrorState());
+    }
   }
 
   void _removeFavCity(RemoveCityEvent event, Emitter<WeatherState> emit) async {
     final citiesList = state.citiesList;
     emit(LoadingCitiesListState());
     await _citiesRepository.removeFavCity(event.selectedCity);
-    final newCitiesList =
-        citiesList.where((element) => element.city != event.selectedCity).toList();
+    final newCitiesList = citiesList
+        .where((element) => element.city != event.selectedCity)
+        .toList();
     emit(LoadedListsState(citiesList: newCitiesList));
   }
 
   void _toLocations(ToLocationsEvent event, Emitter<WeatherState> emit) async {
     emit(ToLocationsState());
-  }
-
-  void _toHome(ToHomeEvent event, Emitter<WeatherState> emit) async {
-    emit(ToHomeState());
   }
 }

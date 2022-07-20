@@ -24,10 +24,10 @@ class LocalDataProvider {
       await database.execute(
           'create table if not exists $favCities ($columnId integer primary key autoincrement, $columnCity text not null, $columnLat double not null, $columnLon double not null)');
     });
-    getListOfAllCities();
+    await getDataFromFile();
   }
 
-  Future<List<Cities>> getListOfAllCities() async {
+  Future<List<Cities>> getDataFromFile() async {
     if (allCities.isEmpty) {
       final String response = await rootBundle.loadString('assets/cities.json');
       final data = await json.decode(response);
@@ -36,7 +36,7 @@ class LocalDataProvider {
     return allCities;
   }
 
-  Future<List<Cities>> getFavCitiesList() async {
+  Future<List<Cities>> citiesLatLonDB() async {
     final favCitiesList = (await _database.rawQuery('SELECT * FROM $favCities'))
         .map((e) => Cities.fromDB(e))
         .toList();

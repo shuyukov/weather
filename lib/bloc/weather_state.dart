@@ -6,8 +6,7 @@ abstract class WeatherState {
   WeatherState({this.citiesList = const [], this.hintsList = const []});
 }
 
-class LoadingCitiesListState extends WeatherState {
-}
+class LoadingCitiesListState extends WeatherState {}
 
 class LoadedListsState extends WeatherState {
   LoadedListsState(
@@ -15,11 +14,10 @@ class LoadedListsState extends WeatherState {
       : super(citiesList: citiesList, hintsList: hintsList);
 }
 
-class ToLocationsState extends WeatherState {
-}
+class ToLocationsState extends WeatherState {}
 
-class ToHomeState extends WeatherState {
-}
+class ToHomeState extends WeatherState {}
 
-class ClearTextFieldState extends WeatherState {
-}
+class ClearTextFieldState extends WeatherState {}
+
+class NetworkErrorState extends WeatherState {}

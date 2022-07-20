@@ -21,5 +21,3 @@ class RemoveCityEvent extends WeatherEvent {
 }
 
 class ToLocationsEvent extends WeatherEvent {}
-
-class ToHomeEvent extends WeatherEvent {}
