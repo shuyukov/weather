@@ -9,7 +9,14 @@ import 'package:flutter/services.dart';
 import 'package:weather/repositories/cities_repository.dart';
 import 'config.dart';
 
-void main() => runApp(App());
+void main() {
+  return BlocOverrides.runZoned(
+    () {
+      WidgetsFlutterBinding.ensureInitialized();
+      runApp(App());
+    },
+  );
+}
 
 class App extends StatelessWidget {
   App({Key? key}) : super(key: key);

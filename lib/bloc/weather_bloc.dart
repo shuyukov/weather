@@ -26,14 +26,8 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
 
   Future _setEnteredCity(AddCityEvent event, Emitter<WeatherState> emit) async {
     emit(LoadingCitiesListState());
-    final result = await _citiesRepository.getWeatherByCity(event.selectedCity);
-    final citiesList = await _citiesRepository.getWeatherForFavCities();
-    
-    if (result != null &&
-        citiesList.where((e) => e.city == result.city).isEmpty) {
-      citiesList.add(result);
-      _citiesRepository.saveFavCity(Cities.fromWeather(result));
-    }
+    final citiesList =
+        await _citiesRepository.checkAndSaveCity(event.selectedCity);
     emit(ClearTextFieldState());
     emit(LoadedListsState(citiesList: citiesList));
   }

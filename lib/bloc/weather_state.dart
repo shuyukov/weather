@@ -23,4 +23,3 @@ class ToHomeState extends WeatherState {
 
 class ClearTextFieldState extends WeatherState {
 }
-
