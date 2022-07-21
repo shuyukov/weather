@@ -9,6 +9,7 @@ class ErrorMessage extends StatelessWidget {
     return Center(
       child: Text(
         "Failed to load weather data.\nLong tap will refresh the page.",
+        textAlign: TextAlign.center,
         style: Config.bodyText1.copyWith(fontSize: 16, height: 1.5),
       ),
     );
