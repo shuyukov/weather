@@ -47,6 +47,7 @@ class AppView extends StatelessWidget {
     return MaterialApp(
       theme: Config.appTheme,
       home: const SplashScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
